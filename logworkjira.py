@@ -84,6 +84,11 @@ while True :
     # Click on the button Next 
     # print("date selected = " + tools.driver.find_elements_by_xpath('//*[@id="datePickerText"]/span[1]')[0].text.encode('utf-8'))
     
+    # Recovered the date selected
+    if (tools.driver.find_elements_by_xpath('//*[@id="datePickerText"]/span[1]')[0].text.encode('utf-8') == 'Today,') :
+        time.sleep(1)
+        break
+    
     time.sleep(2)
     
     # Try to find if the JIRA is present or not
@@ -109,18 +114,14 @@ while True :
     tools.waitLoadingPageByXPATH2(10, '//*[@id="nextDayTrackButton"]')    
     next_button = tools.driver.find_element_by_xpath('//*[@id="nextDayTrackButton"]')
     next_button.click()
-    # Recovered the date selected
-    if (tools.driver.find_elements_by_xpath('//*[@id="datePickerText"]/span[1]')[0].text.encode('utf-8') == 'Today,') :
-        break
+    
     time.sleep(1)
     
-
-
 # Try to find if the JIRA is present or not for Today
 # Need to know how much row there is in this day
 # Need to wait the load of the Total of the day except when they are no logs for this day => count_of_divs = 1
 count_of_divs = len(tools.driver.find_elements_by_xpath('//*[@id="trackPage"]/div[5]/div/div'))
-# print ("count_of_divs : " + str(count_of_divs))
+print ("count_of_divs : " + str(count_of_divs))
 
 if (count_of_divs != 1) :
     tools.waitLoadingPageByXPATH2(5, '//*[@id="trackPage"]/div[5]/div/div['+str(count_of_divs)+']/span')
@@ -132,9 +133,9 @@ for x in range(count_of_divs):
     if (len(text) > 0 ) :
         # print(text[0].text.encode('utf-8'))
         if (text[0].text.encode('utf-8') == j.jira) :
-            # print ('Find the JIRA = ' + text[0].text.encode('utf-8') )
+            print ('Find the JIRA = ' + text[0].text.encode('utf-8') )
             text2 = tools.driver.find_elements_by_xpath('//*[@id="trackPage"]/div[5]/div/div['+ str(x + 1) + ']/div/log-display/div/div[2]/div/div[1]/span/time-display/span')
-            # print ('Time for this task = ' + str(text2[0].text.encode('utf-8')))
+            print ('Time for this task = ' + str(text2[0].text.encode('utf-8')))
             array.append([tools.driver.find_elements_by_xpath('//*[@id="datePickerText"]/span[1]')[0].text.encode('utf-8'), str(text2[0].text.encode('utf-8'))])
 
 
