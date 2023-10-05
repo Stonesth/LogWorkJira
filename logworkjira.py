@@ -14,16 +14,18 @@ propertiesFolder_path = save_path + "/"+ "Properties"
 # Example of used
 # user_text = tools.readProperty(propertiesFolder_path, 'LogWorkJira', 'user_text=')
 j.jira = tools.readProperty(propertiesFolder_path, 'LogWorkJira', 'jira=')
+j.userInsim = tools.readProperty(propertiesFolder_path, 'LogWorkJira', 'userInsim=')
 
 # Open Browser
 tools.openBrowserChrome()
 
 # # Go to the jira to know when the jira was created
-j.connectToJira(j.jira)
+j.connectToJiraInsim(j.jira, j.userInsim)
 j.recoverJiraInformation()
 
 # # Open MyHours
 m.connectToMyHours()
+# Enter credentilas into the loading screen
 m.enterCredentials()
 
 # Need to go to the date of the Jira was created
@@ -231,9 +233,15 @@ for r in array:
     time.sleep(5)
     
 # Need to place the JIRA in DONE
-tools.waitLoadingPageByXPATH2(10, '//*[@id="action_id_31"]')
-log_button = tools.driver.find_element_by_xpath('//*[@id="action_id_31"]')
+tools.waitLoadingPageByXPATH2(10, '//*[@id="opsbar-transitions_more"]')
+log_button = tools.driver.find_element_by_xpath('//*[@id="opsbar-transitions_more"]')
 log_button.click()
+
+time.sleep(1)
+tools.waitLoadingPageByXPATH2(10, '//*[@id="action_id_31"]/a/div/div[1]')
+log_button = tools.driver.find_element_by_xpath('//*[@id="action_id_31"]/a/div/div[1]')
+log_button.click()
+
 
 print(str(time_all))
 timedelta_8 = timedelta(hours=8, minutes=0, seconds=0)
