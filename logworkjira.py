@@ -60,14 +60,14 @@ time.sleep(1)
 
 # Select the day
 day_to_search = str(datetime_object.day)
-# print('day_to_search = ' + day_to_search)
+print('day_to_search = ' + day_to_search)
 
 
 for tr_n in range(1, 7):
 
     for td_n in range(1, 8):
-        # print (str(tools.driver.find_element(By.XPATH, '//*[@id="AppWrapper"]/div[3]/div[2]/div[1]/table/tbody/tr[' + str(tr_n) + ']/td[' + str(td_n) + ']').text.encode('utf-8')))
-        if (day_to_search == str(tools.driver.find_element(By.XPATH, '//*[@id="AppWrapper"]/div[3]/div[2]/div[1]/table/tbody/tr[' + str(tr_n) + ']/td[' + str(td_n) + ']').text.encode('utf-8'))) :
+        # print (str(tools.driver.find_element(By.XPATH, '//*[@id="AppWrapper"]/div[3]/div[2]/div[1]/table/tbody/tr[' + str(tr_n) + ']/td[' + str(td_n) + ']').text.encode('utf-8').decode()))
+        if (day_to_search == str(tools.driver.find_element(By.XPATH, '//*[@id="AppWrapper"]/div[3]/div[2]/div[1]/table/tbody/tr[' + str(tr_n) + ']/td[' + str(td_n) + ']').text.encode('utf-8').decode())) :
             AppWrapper_day = tools.driver.find_element(By.XPATH, '//*[@id="AppWrapper"]/div[3]/div[2]/div[1]/table/tbody/tr[' + str(tr_n) + ']/td[' + str(td_n) + ']')
             AppWrapper_day.click()  
             break    
@@ -85,10 +85,10 @@ array = [ ]
 # Click on the button Next until we arrived of Today
 while True :
     # Click on the button Next 
-    # print("date selected = " + tools.driver.find_elements(By.XPATH, '//*[@id="datePickerText"]/span[1]')[0].text.encode('utf-8'))
+    # print("date selected = " + tools.driver.find_elements(By.XPATH, '//*[@id="datePickerText"]/span[1]')[0].text.encode('utf-8').decode())
     
     # Recovered the date selected
-    if (tools.driver.find_elements(By.XPATH, '//*[@id="datePickerText"]/span[1]')[0].text.encode('utf-8') == 'Today,') :
+    if (tools.driver.find_elements(By.XPATH, '//*[@id="datePickerText"]/span[1]')[0].text.encode('utf-8').decode() == 'Today,') :
         time.sleep(1)
         break
     
@@ -106,12 +106,12 @@ while True :
     for x in range(count_of_divs):
         text = tools.driver.find_elements(By.XPATH, '//*[@id="trackPage"]/div[5]/div/div['+ str(x + 1) + ']/div/log-display/div/div[1]/div/div[1]/log-details-display/div/div[2]/span')
         if (len(text) > 0 ) :
-            # print(text[0].text.encode('utf-8'))
-            if (text[0].text.encode('utf-8') == j.jira) :
-                # print ('Find the JIRA = ' + text[0].text.encode('utf-8') )
+            # print(text[0].text.encode('utf-8').decode())
+            if (text[0].text.encode('utf-8').decode() == j.jira) :
+                # print ('Find the JIRA = ' + text[0].text.encode('utf-8').decode() )
                 text2 = tools.driver.find_elements(By.XPATH, '//*[@id="trackPage"]/div[5]/div/div['+ str(x + 1) + ']/div/log-display/div/div[2]/div/div[1]/span/time-display/span')
-                # print ('Time for this task = ' + str(text2[0].text.encode('utf-8')))
-                array.append([tools.driver.find_elements(By.XPATH, '//*[@id="datePickerText"]/span[1]')[0].text.encode('utf-8'), str(text2[0].text.encode('utf-8'))])
+                # print ('Time for this task = ' + str(text2[0].text.encode('utf-8').decode()))
+                array.append([tools.driver.find_elements(By.XPATH, '//*[@id="datePickerText"]/span[1]')[0].text.encode('utf-8').decode(), str(text2[0].text.encode('utf-8').decode())])
                 
     # Click on the button Next
     tools.waitLoadingPageByXPATH2(10, '//*[@id="nextDayTrackButton"]')    
@@ -134,12 +134,12 @@ time.sleep(2)
 for x in range(count_of_divs):
     text = tools.driver.find_elements(By.XPATH, '//*[@id="trackPage"]/div[5]/div/div['+ str(x + 1) + ']/div/log-display/div/div[1]/div/div[1]/log-details-display/div/div[2]/span')
     if (len(text) > 0 ) :
-        # print(text[0].text.encode('utf-8'))
-        if (text[0].text.encode('utf-8') == j.jira) :
-            print ('Find the JIRA = ' + text[0].text.encode('utf-8') )
+        # print(text[0].text.encode('utf-8').decode())
+        if (text[0].text.encode('utf-8').decode() == j.jira) :
+            print ('Find the JIRA = ' + text[0].text.encode('utf-8').decode() )
             text2 = tools.driver.find_elements(By.XPATH, '//*[@id="trackPage"]/div[5]/div/div['+ str(x + 1) + ']/div/log-display/div/div[2]/div/div[1]/span/time-display/span')
-            print ('Time for this task = ' + str(text2[0].text.encode('utf-8')))
-            array.append([tools.driver.find_elements(By.XPATH, '//*[@id="datePickerText"]/span[1]')[0].text.encode('utf-8'), str(text2[0].text.encode('utf-8'))])
+            print ('Time for this task = ' + str(text2[0].text.encode('utf-8').decode()))
+            array.append([tools.driver.find_elements(By.XPATH, '//*[@id="datePickerText"]/span[1]')[0].text.encode('utf-8').decode(), str(text2[0].text.encode('utf-8').decode())])
 
 
 # Need to go to the Jira
