@@ -6,6 +6,7 @@ from os.path import dirname
 import time
 from datetime import datetime, timedelta
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 
 # -11 for the name of this project LogWorkJira
 save_path = os.path.dirname(os.path.abspath("__file__"))
@@ -31,7 +32,7 @@ m.enterCredentials()
 # Need to go to the date of the Jira was created
 # Select the date in the select button
 tools.waitLoadingPageByXPATH2(20, '//*[@id="selectDayTrackButton"]')     
-selectDayTrackButton = tools.driver.find_element_by_xpath('//*[@id="selectDayTrackButton"]')
+selectDayTrackButton = tools.driver.find_element(By.XPATH, '//*[@id="selectDayTrackButton"]')
 selectDayTrackButton.click()    
 
 # Translate the date (Creation of this JIRA) retrieved in the Jira
@@ -45,7 +46,7 @@ year_to_search = str(datetime_object.year- 1922)
 print('year_to_search = ' + year_to_search)
 # Select the year
 tools.waitLoadingPageByXPATH2(10, '//*[@id="AppWrapper"]/div[3]/div[2]/div[1]/table/thead/tr[1]/th[2]/select[2]')     
-AppWrapper_year = tools.driver.find_element_by_xpath('//*[@id="AppWrapper"]/div[3]/div[2]/div[1]/table/thead/tr[1]/th[2]/select[2]/option['+year_to_search+']')
+AppWrapper_year = tools.driver.find_element(By.XPATH, '//*[@id="AppWrapper"]/div[3]/div[2]/div[1]/table/thead/tr[1]/th[2]/select[2]/option['+year_to_search+']')
 AppWrapper_year.click()   
 time.sleep(1)  
 
@@ -53,7 +54,7 @@ time.sleep(1)
 month_to_search = str(datetime_object.month)
 # print('month_to_search = ' + month_to_search)
 tools.waitLoadingPageByXPATH2(10, '//*[@id="AppWrapper"]/div[3]/div[2]/div[1]/table/thead/tr[1]/th[2]/select[1]')     
-AppWrapper_month = tools.driver.find_element_by_xpath('//*[@id="AppWrapper"]/div[3]/div[2]/div[1]/table/thead/tr[1]/th[2]/select[1]/option['+month_to_search+']')
+AppWrapper_month = tools.driver.find_element(By.XPATH, '//*[@id="AppWrapper"]/div[3]/div[2]/div[1]/table/thead/tr[1]/th[2]/select[1]/option['+month_to_search+']')
 AppWrapper_month.click() 
 time.sleep(1)  
 
@@ -65,9 +66,9 @@ day_to_search = str(datetime_object.day)
 for tr_n in range(1, 7):
 
     for td_n in range(1, 8):
-        # print (str(tools.driver.find_element_by_xpath('//*[@id="AppWrapper"]/div[3]/div[2]/div[1]/table/tbody/tr[' + str(tr_n) + ']/td[' + str(td_n) + ']').text.encode('utf-8')))
-        if (day_to_search == str(tools.driver.find_element_by_xpath('//*[@id="AppWrapper"]/div[3]/div[2]/div[1]/table/tbody/tr[' + str(tr_n) + ']/td[' + str(td_n) + ']').text.encode('utf-8'))) :
-            AppWrapper_day = tools.driver.find_element_by_xpath('//*[@id="AppWrapper"]/div[3]/div[2]/div[1]/table/tbody/tr[' + str(tr_n) + ']/td[' + str(td_n) + ']')
+        # print (str(tools.driver.find_element(By.XPATH, '//*[@id="AppWrapper"]/div[3]/div[2]/div[1]/table/tbody/tr[' + str(tr_n) + ']/td[' + str(td_n) + ']').text.encode('utf-8')))
+        if (day_to_search == str(tools.driver.find_element(By.XPATH, '//*[@id="AppWrapper"]/div[3]/div[2]/div[1]/table/tbody/tr[' + str(tr_n) + ']/td[' + str(td_n) + ']').text.encode('utf-8'))) :
+            AppWrapper_day = tools.driver.find_element(By.XPATH, '//*[@id="AppWrapper"]/div[3]/div[2]/div[1]/table/tbody/tr[' + str(tr_n) + ']/td[' + str(td_n) + ']')
             AppWrapper_day.click()  
             break    
 
@@ -84,10 +85,10 @@ array = [ ]
 # Click on the button Next until we arrived of Today
 while True :
     # Click on the button Next 
-    # print("date selected = " + tools.driver.find_elements_by_xpath('//*[@id="datePickerText"]/span[1]')[0].text.encode('utf-8'))
+    # print("date selected = " + tools.driver.find_elements(By.XPATH, '//*[@id="datePickerText"]/span[1]')[0].text.encode('utf-8'))
     
     # Recovered the date selected
-    if (tools.driver.find_elements_by_xpath('//*[@id="datePickerText"]/span[1]')[0].text.encode('utf-8') == 'Today,') :
+    if (tools.driver.find_elements(By.XPATH, '//*[@id="datePickerText"]/span[1]')[0].text.encode('utf-8') == 'Today,') :
         time.sleep(1)
         break
     
@@ -95,7 +96,7 @@ while True :
     
     # Try to find if the JIRA is present or not
     # Need to know how much row there is in this day
-    count_of_divs = len(tools.driver.find_elements_by_xpath('//*[@id="trackPage"]/div[5]/div/div'))
+    count_of_divs = len(tools.driver.find_elements(By.XPATH, '//*[@id="trackPage"]/div[5]/div/div'))
     # print ("count_of_divs : " + str(count_of_divs))
     
     # Need to wait the load of the Total of the day except when they are no logs for this day => count_of_divs = 1
@@ -103,18 +104,18 @@ while True :
         tools.waitLoadingPageByXPATH2(5, '//*[@id="trackPage"]/div[5]/div/div['+str(count_of_divs)+']/span')
     
     for x in range(count_of_divs):
-        text = tools.driver.find_elements_by_xpath('//*[@id="trackPage"]/div[5]/div/div['+ str(x + 1) + ']/div/log-display/div/div[1]/div/div[1]/log-details-display/div/div[2]/span')
+        text = tools.driver.find_elements(By.XPATH, '//*[@id="trackPage"]/div[5]/div/div['+ str(x + 1) + ']/div/log-display/div/div[1]/div/div[1]/log-details-display/div/div[2]/span')
         if (len(text) > 0 ) :
             # print(text[0].text.encode('utf-8'))
             if (text[0].text.encode('utf-8') == j.jira) :
                 # print ('Find the JIRA = ' + text[0].text.encode('utf-8') )
-                text2 = tools.driver.find_elements_by_xpath('//*[@id="trackPage"]/div[5]/div/div['+ str(x + 1) + ']/div/log-display/div/div[2]/div/div[1]/span/time-display/span')
+                text2 = tools.driver.find_elements(By.XPATH, '//*[@id="trackPage"]/div[5]/div/div['+ str(x + 1) + ']/div/log-display/div/div[2]/div/div[1]/span/time-display/span')
                 # print ('Time for this task = ' + str(text2[0].text.encode('utf-8')))
-                array.append([tools.driver.find_elements_by_xpath('//*[@id="datePickerText"]/span[1]')[0].text.encode('utf-8'), str(text2[0].text.encode('utf-8'))])
+                array.append([tools.driver.find_elements(By.XPATH, '//*[@id="datePickerText"]/span[1]')[0].text.encode('utf-8'), str(text2[0].text.encode('utf-8'))])
                 
     # Click on the button Next
     tools.waitLoadingPageByXPATH2(10, '//*[@id="nextDayTrackButton"]')    
-    next_button = tools.driver.find_element_by_xpath('//*[@id="nextDayTrackButton"]')
+    next_button = tools.driver.find_element(By.XPATH, '//*[@id="nextDayTrackButton"]')
     next_button.click()
     
     time.sleep(1)
@@ -122,7 +123,7 @@ while True :
 # Try to find if the JIRA is present or not for Today
 # Need to know how much row there is in this day
 # Need to wait the load of the Total of the day except when they are no logs for this day => count_of_divs = 1
-count_of_divs = len(tools.driver.find_elements_by_xpath('//*[@id="trackPage"]/div[5]/div/div'))
+count_of_divs = len(tools.driver.find_elements(By.XPATH, '//*[@id="trackPage"]/div[5]/div/div'))
 print ("count_of_divs : " + str(count_of_divs))
 
 if (count_of_divs != 1) :
@@ -131,14 +132,14 @@ if (count_of_divs != 1) :
 time.sleep(2)
 
 for x in range(count_of_divs):
-    text = tools.driver.find_elements_by_xpath('//*[@id="trackPage"]/div[5]/div/div['+ str(x + 1) + ']/div/log-display/div/div[1]/div/div[1]/log-details-display/div/div[2]/span')
+    text = tools.driver.find_elements(By.XPATH, '//*[@id="trackPage"]/div[5]/div/div['+ str(x + 1) + ']/div/log-display/div/div[1]/div/div[1]/log-details-display/div/div[2]/span')
     if (len(text) > 0 ) :
         # print(text[0].text.encode('utf-8'))
         if (text[0].text.encode('utf-8') == j.jira) :
             print ('Find the JIRA = ' + text[0].text.encode('utf-8') )
-            text2 = tools.driver.find_elements_by_xpath('//*[@id="trackPage"]/div[5]/div/div['+ str(x + 1) + ']/div/log-display/div/div[2]/div/div[1]/span/time-display/span')
+            text2 = tools.driver.find_elements(By.XPATH, '//*[@id="trackPage"]/div[5]/div/div['+ str(x + 1) + ']/div/log-display/div/div[2]/div/div[1]/span/time-display/span')
             print ('Time for this task = ' + str(text2[0].text.encode('utf-8')))
-            array.append([tools.driver.find_elements_by_xpath('//*[@id="datePickerText"]/span[1]')[0].text.encode('utf-8'), str(text2[0].text.encode('utf-8'))])
+            array.append([tools.driver.find_elements(By.XPATH, '//*[@id="datePickerText"]/span[1]')[0].text.encode('utf-8'), str(text2[0].text.encode('utf-8'))])
 
 
 # Need to go to the Jira
@@ -176,17 +177,17 @@ for r in array:
     
     # Click on the more button to add the hours 
     tools.waitLoadingPageByXPATH2(10, '//*[@id="opsbar-operations_more"]')
-    more_button = tools.driver.find_element_by_xpath('//*[@id="opsbar-operations_more"]')
+    more_button = tools.driver.find_element(By.XPATH, '//*[@id="opsbar-operations_more"]')
     more_button.click()
     
     # Click on the log work button to add the hours 
     tools.waitLoadingPageByXPATH2(10, '//*[@id="log-work"]/a/span')
-    log_work_button = tools.driver.find_element_by_xpath('//*[@id="log-work"]/a/span')
+    log_work_button = tools.driver.find_element(By.XPATH, '//*[@id="log-work"]/a/span')
     log_work_button.click()
     
     # Introduce into the input of Time Spent the time for this day
     tools.waitLoadingPageByXPATH2(10, '//*[@id="log-work-time-logged"]')
-    log_work_time_logged = tools.driver.find_element_by_xpath('//*[@id="log-work-time-logged"]')
+    log_work_time_logged = tools.driver.find_element(By.XPATH, '//*[@id="log-work-time-logged"]')
     if (time_object.hour > 0) :
         log_work_time_logged.send_keys(str(time_object.hour) + 'h ')
     if (time_object.second > 29) :
@@ -196,7 +197,7 @@ for r in array:
         
     # Introduce into the input the date
     tools.waitLoadingPageByXPATH2(10, '//*[@id="log-work-date-logged-date-picker"]')
-    log_work_date_logged_date_picker = tools.driver.find_element_by_xpath('//*[@id="log-work-date-logged-date-picker"]')
+    log_work_date_logged_date_picker = tools.driver.find_element(By.XPATH, '//*[@id="log-work-date-logged-date-picker"]')
     log_work_date_logged_date_picker.send_keys(Keys.CONTROL, 'a')
     
     # Month
@@ -223,7 +224,7 @@ for r in array:
     log_work_date_logged_date_picker.send_keys(str(date_object.day) + '/' +month_name+ '/'+str(year_2_digit)+' 10:00 PM')
 
     tools.waitLoadingPageByXPATH2(10, '//*[@id="log-work-submit"]')
-    log_button = tools.driver.find_element_by_xpath('//*[@id="log-work-submit"]')
+    log_button = tools.driver.find_element(By.XPATH, '//*[@id="log-work-submit"]')
     log_button.click()
     
     # Need to add the time past to this JIRA
@@ -234,12 +235,12 @@ for r in array:
     
 # Need to place the JIRA in DONE
 tools.waitLoadingPageByXPATH2(10, '//*[@id="opsbar-transitions_more"]')
-log_button = tools.driver.find_element_by_xpath('//*[@id="opsbar-transitions_more"]')
+log_button = tools.driver.find_element(By.XPATH, '//*[@id="opsbar-transitions_more"]')
 log_button.click()
 
 time.sleep(1)
 tools.waitLoadingPageByXPATH2(10, '//*[@id="action_id_31"]/a/div/div[1]')
-log_button = tools.driver.find_element_by_xpath('//*[@id="action_id_31"]/a/div/div[1]')
+log_button = tools.driver.find_element(By.XPATH, '//*[@id="action_id_31"]/a/div/div[1]')
 log_button.click()
 
 
@@ -256,13 +257,13 @@ print(str(round(total_sec, 3)))
 
 # Actual Story Points
 tools.waitLoadingPageByXPATH2(10, '//*[@id="customfield_13603"]')
-customfield_13603 = tools.driver.find_element_by_xpath('//*[@id="customfield_13603"]')
+customfield_13603 = tools.driver.find_element(By.XPATH, '//*[@id="customfield_13603"]')
 customfield_13603.click()
 customfield_13603.send_keys(str(round(total_sec, 3)))
 
 # Click on the done button
 tools.waitLoadingPageByXPATH2(10, '//*[@id="issue-workflow-transition-submit"]')
-Done_button = tools.driver.find_element_by_xpath('//*[@id="issue-workflow-transition-submit"]')
+Done_button = tools.driver.find_element(By.XPATH, '//*[@id="issue-workflow-transition-submit"]')
 Done_button.click()
 
 # Close Browser
