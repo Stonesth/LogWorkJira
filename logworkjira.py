@@ -41,8 +41,10 @@ j.created_val = j.created_val.replace('+0100', '')
 datetime_object = datetime.strptime(j.created_val, '%Y-%m-%dT%H:%M:%S')
 # print(j.created_val)
 
-# sub 1921 because 2022 = 101 2023 = 102
-year_to_search = str(datetime_object.year- 1922) 
+# sub 1923 because 2024 = 103
+# sub 1922 because 2023 = 102
+# sub 1921 because 2022 = 101
+year_to_search = str(datetime_object.year- 1923) 
 print('year_to_search = ' + year_to_search)
 # Select the year
 tools.waitLoadingPageByXPATH2(10, '//*[@id="AppWrapper"]/div[3]/div[2]/div[1]/table/thead/tr[1]/th[2]/select[2]')     
