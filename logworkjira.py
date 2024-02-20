@@ -17,6 +17,8 @@ propertiesFolder_path = save_path + "/"+ "Properties"
 j.jira = tools.readProperty(propertiesFolder_path, 'LogWorkJira', 'jira=')
 j.userInsim = tools.readProperty(propertiesFolder_path, 'LogWorkJira', 'userInsim=')
 
+delay_properties = 10
+
 # Open Browser
 tools.openBrowserChrome()
 
@@ -234,17 +236,6 @@ for r in array:
     # print(str(time_all))
     
     time.sleep(5)
-    
-# Need to place the JIRA in DONE
-tools.waitLoadingPageByXPATH2(10, '//*[@id="opsbar-transitions_more"]')
-log_button = tools.driver.find_element(By.XPATH, '//*[@id="opsbar-transitions_more"]')
-log_button.click()
-
-time.sleep(1)
-tools.waitLoadingPageByXPATH2(10, '//*[@id="action_id_31"]/a/div/div[1]')
-log_button = tools.driver.find_element(By.XPATH, '//*[@id="action_id_31"]/a/div/div[1]')
-log_button.click()
-
 
 print(str(time_all))
 timedelta_8 = timedelta(hours=8, minutes=0, seconds=0)
@@ -256,6 +247,36 @@ timedelta_8_sec = timedelta_8.total_seconds()
 
 total_sec = time_all_sec / timedelta_8_sec
 print(str(round(total_sec, 3)))
+
+# Need to update the JIRA for the Story Points only if this one is not filled
+if tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="customfield_10004-val"]') :
+    print ("There is already a Story Point => don't update the Story Point ")
+else : 
+    # click on the edit button
+    tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="opsbar-edit-issue_container"]')
+    edit_button = tools.driver.find_element(By.XPATH, '//*[@id="opsbar-edit-issue_container"]')
+    edit_button.click()
+
+    # click in the input field Story Points
+    tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="customfield_10004"]')
+    inputStoryPoint = tools.driver.find_element(By.XPATH, '//*[@id="customfield_10004"]')
+    inputStoryPoint.click()
+    inputStoryPoint.send_keys(str(round(total_sec, 3)))
+
+    # cllick in the update button
+    tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="edit-issue-submit"]')
+    update_button = tools.driver.find_element(By.XPATH, '//*[@id="edit-issue-submit"]')
+    update_button.click()
+
+    # Need to place the JIRA in DONE
+    tools.waitLoadingPageByXPATH2(10, '//*[@id="opsbar-transitions_more"]')
+    log_button = tools.driver.find_element(By.XPATH, '//*[@id="opsbar-transitions_more"]')
+    log_button.click()
+
+    time.sleep(1)
+    tools.waitLoadingPageByXPATH2(10, '//*[@id="action_id_31"]/a/div/div[1]')
+    log_button = tools.driver.find_element(By.XPATH, '//*[@id="action_id_31"]/a/div/div[1]')
+    log_button.click()
 
 # Actual Story Points
 tools.waitLoadingPageByXPATH2(10, '//*[@id="customfield_13603"]')
