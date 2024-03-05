@@ -140,9 +140,9 @@ for x in range(count_of_divs):
     if (len(text) > 0 ) :
         # print(text[0].text.encode('utf-8').decode())
         if (text[0].text.encode('utf-8').decode() == j.jira) :
-            print ('Find the JIRA = ' + text[0].text.encode('utf-8').decode() )
+            # print ('Find the JIRA = ' + text[0].text.encode('utf-8').decode() )
             text2 = tools.driver.find_elements(By.XPATH, '//*[@id="trackPage"]/div[5]/div/div['+ str(x + 1) + ']/div/log-display/div/div[2]/div/div[1]/span/time-display/span')
-            print ('Time for this task = ' + str(text2[0].text.encode('utf-8').decode()))
+            # print ('Time for this task = ' + str(text2[0].text.encode('utf-8').decode()))
             array.append([tools.driver.find_elements(By.XPATH, '//*[@id="datePickerText"]/span[1]')[0].text.encode('utf-8').decode(), str(text2[0].text.encode('utf-8').decode())])
 
 
@@ -168,10 +168,12 @@ for r in array:
     date_to_translate = date_to_translate.replace('Sun, ', '')
     date_to_translate = date_to_translate.replace('Today,', '')
     
+    print(date_to_translate + ' ' + str(datetime_object.year))
+
     if r[0].find('Today,') != -1:
         date_object = datetime.now()
     else:
-        date_object = datetime.strptime(date_to_translate, '%d %b')
+        date_object = datetime.strptime(date_to_translate + ' ' + str(datetime_object.year), '%d %b %Y')
     
     # print(date_object.day)
     # print(date_object.month)
@@ -260,32 +262,38 @@ else :
     # click in the input field Story Points
     tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="customfield_10004"]')
     inputStoryPoint = tools.driver.find_element(By.XPATH, '//*[@id="customfield_10004"]')
+    time.sleep(1)
     inputStoryPoint.click()
+    time.sleep(1)
     inputStoryPoint.send_keys(str(round(total_sec, 3)))
 
     # cllick in the update button
     tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="edit-issue-submit"]')
     update_button = tools.driver.find_element(By.XPATH, '//*[@id="edit-issue-submit"]')
     update_button.click()
+    
+    time.sleep(delay_properties)
 
 # Need to place the JIRA in DONE
-tools.waitLoadingPageByXPATH2(10, '//*[@id="opsbar-transitions_more"]')
+tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="opsbar-transitions_more"]')
 log_button = tools.driver.find_element(By.XPATH, '//*[@id="opsbar-transitions_more"]')
 log_button.click()
 
-time.sleep(1)
-tools.waitLoadingPageByXPATH2(10, '//*[@id="action_id_31"]/a/div/div[1]')
+time.sleep(2)
+tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="action_id_31"]/a/div/div[1]')
 log_button = tools.driver.find_element(By.XPATH, '//*[@id="action_id_31"]/a/div/div[1]')
+time.sleep(1)
 log_button.click()
 
 # Actual Story Points
-tools.waitLoadingPageByXPATH2(10, '//*[@id="customfield_13603"]')
+time.sleep(1)
+tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="customfield_13603"]')
 customfield_13603 = tools.driver.find_element(By.XPATH, '//*[@id="customfield_13603"]')
 customfield_13603.click()
 customfield_13603.send_keys(str(round(total_sec, 3)))
 
 # Click on the done button
-tools.waitLoadingPageByXPATH2(10, '//*[@id="issue-workflow-transition-submit"]')
+tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="issue-workflow-transition-submit"]')
 Done_button = tools.driver.find_element(By.XPATH, '//*[@id="issue-workflow-transition-submit"]')
 Done_button.click()
 
