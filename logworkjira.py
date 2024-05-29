@@ -260,7 +260,10 @@ for r in array:
     if (time_object.second > 29) :
         log_work_time_logged.send_keys(str(time_object.minute + 1) + 'm ')
     else :
-        log_work_time_logged.send_keys(str(time_object.minute) + 'm ')
+        if (time_object.minute > 0) :
+            log_work_time_logged.send_keys(str(time_object.minute) + 'm ')
+        else :
+            log_work_time_logged.send_keys(str(time_object.minute + 1) + 'm ')
         
     # Introduce into the input the date
     tools.waitLoadingPageByXPATH2(10, '//*[@id="log-work-date-logged-date-picker"]')
