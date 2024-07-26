@@ -16,14 +16,30 @@ propertiesFolder_path = save_path + "/"+ "Properties"
 # user_text = tools.readProperty(propertiesFolder_path, 'LogWorkJira', 'user_text=')
 j.jira = tools.readProperty(propertiesFolder_path, 'LogWorkJira', 'jira=')
 j.userInsim = tools.readProperty(propertiesFolder_path, 'LogWorkJira', 'userInsim=')
+j.userInsimPassword = tools.readProperty(propertiesFolder_path, 'LogWorkJira', 'userInsimPassword=')
 
 delay_properties = 10
+
+
+import pkg_resources
+
+def get_version(package_name):
+    try:
+        return pkg_resources.get_distribution(package_name).version
+    except pkg_resources.DistributionNotFound:
+        return "Package not found"
+
+print(get_version("chromedriver-py"))
+
+
+
+
 
 # Open Browser
 tools.openBrowserChrome()
 
 # # Go to the jira to know when the jira was created
-j.connectToJiraInsim(j.jira, j.userInsim)
+j.connectToJiraInsim(j.jira, j.userInsim, j.userInsimPassword)
 j.recoverJiraInformation()
 
 # # Open MyHours
@@ -37,8 +53,11 @@ m.enterCredentials()
 
 # tools.waitLoadingPageByXPATH2(20, '//*[@id="selectDayTrackButton"]')     
 # selectDayTrackButton = tools.driver.find_element(By.XPATH, '//*[@id="selectDayTrackButton"]')
-tools.waitLoadingPageByXPATH2(20, '/html/body/mh-root/div/div/mh-large-layout/div/ng-component/mh-track-navigation-bar/div/div[1]/div[1]/mh-track-date-picker/div/sds-date-picker/div[1]/button[2]/div/div[2]/span')
-selectDayTrackButton = tools.driver.find_element(By.XPATH, '/html/body/mh-root/div/div/mh-large-layout/div/ng-component/mh-track-navigation-bar/div/div[1]/div[1]/mh-track-date-picker/div/sds-date-picker/div[1]/button[2]/div/div[2]/span')
+# tools.waitLoadingPageByXPATH2(20, '/html/body/mh-root/div/div/mh-large-layout/div/ng-component/mh-track-navigation-bar/div/div[1]/div[1]/mh-track-date-picker/div/sds-date-picker/div[1]/button[2]/div/div[2]/span')
+# selectDayTrackButton = tools.driver.find_element(By.XPATH, '/html/body/mh-root/div/div/mh-large-layout/div/ng-component/mh-track-navigation-bar/div/div[1]/div[1]/mh-track-date-picker/div/sds-date-picker/div[1]/button[2]/div/div[2]/span')
+tools.waitLoadingPageByXPATH2(20, '/html/body/mh-root/div/div/mh-large-layout/div/ng-component/div[2]/mh-track-navigation-bar/div/div[1]/div[1]/mh-track-date-picker/div/sds-date-picker/div[1]/button[2]/div/div[2]/span')
+selectDayTrackButton = tools.driver.find_element(By.XPATH, '/html/body/mh-root/div/div/mh-large-layout/div/ng-component/div[2]/mh-track-navigation-bar/div/div[1]/div[1]/mh-track-date-picker/div/sds-date-picker/div[1]/button[2]/div/div[2]/span')
+
 selectDayTrackButton.click()   
 time.sleep(1) 
 
@@ -111,14 +130,15 @@ array = [ ]
 while True :
     # Click on the button Next 
     # print("date selected = " + tools.driver.find_elements(By.XPATH, '//*[@id="datePickerText"]/span[1]')[0].text.encode('utf-8').decode())
-    
-    print("date selected = " + tools.driver.find_elements(By.XPATH, '/html/body/mh-root/div/div/mh-large-layout/div/ng-component/mh-track-navigation-bar/div/div[1]/div[1]/mh-track-date-picker/div/sds-date-picker/div[1]/button[2]/div/div[2]/span')[0].text.encode('utf-8').decode())
+    # print("date selected = " + tools.driver.find_elements(By.XPATH, '/html/body/mh-root/div/div/mh-large-layout/div/ng-component/mh-track-navigation-bar/div/div[1]/div[1]/mh-track-date-picker/div/sds-date-picker/div[1]/button[2]/div/div[2]/span')[0].text.encode('utf-8').decode())
+    print("date selected = " + tools.driver.find_elements(By.XPATH, '/html/body/mh-root/div/div/mh-large-layout/div/ng-component/div[2]/mh-track-navigation-bar/div/div[1]/div[1]/mh-track-date-picker/div/sds-date-picker/div[1]/button[2]/div/div[2]/span')[0].text.encode('utf-8').decode())
     
 
     # try to find if the date selected is today
     # eg : Wed, 22 May (Today) 
     # Try to find if in this date there is the word (Today)
-    if "(Today)" in tools.driver.find_elements(By.XPATH, '/html/body/mh-root/div/div/mh-large-layout/div/ng-component/mh-track-navigation-bar/div/div[1]/div[1]/mh-track-date-picker/div/sds-date-picker/div[1]/button[2]/div/div[2]/span')[0].text.encode('utf-8').decode(): 
+    # if "(Today)" in tools.driver.find_elements(By.XPATH, '/html/body/mh-root/div/div/mh-large-layout/div/ng-component/mh-track-navigation-bar/div/div[1]/div[1]/mh-track-date-picker/div/sds-date-picker/div[1]/button[2]/div/div[2]/span')[0].text.encode('utf-8').decode(): 
+    if "(Today)" in tools.driver.find_elements(By.XPATH, '/html/body/mh-root/div/div/mh-large-layout/div/ng-component/div[2]/mh-track-navigation-bar/div/div[1]/div[1]/mh-track-date-picker/div/sds-date-picker/div[1]/button[2]/div/div[2]/span')[0].text.encode('utf-8').decode(): 
         time.sleep(1) 
         break
 
@@ -156,7 +176,8 @@ while True :
                 print ('Find the JIRA = ' + text[0].text.encode('utf-8').decode() )
                 text2 = tools.driver.find_elements(By.XPATH, '/html/body/mh-root/div/div/mh-large-layout/div/ng-component/mh-log-list/div/mh-log-item['+ str(x + 1) + ']/div/div/div/div[2]/div/div/mh-time-display/span')
                 print ('Time for this task = ' + str(text2[0].text.encode('utf-8').decode()))
-                array.append([tools.driver.find_elements(By.XPATH, '/html/body/mh-root/div/div/mh-large-layout/div/ng-component/mh-track-navigation-bar/div/div[1]/div[1]/mh-track-date-picker/div/sds-date-picker/div[1]/button[2]/div/div[2]/span')[0].text.encode('utf-8').decode(), str(text2[0].text.encode('utf-8').decode())])
+                # array.append([tools.driver.find_elements(By.XPATH, '/html/body/mh-root/div/div/mh-large-layout/div/ng-component/mh-track-navigation-bar/div/div[1]/div[1]/mh-track-date-picker/div/sds-date-picker/div[1]/button[2]/div/div[2]/span')[0].text.encode('utf-8').decode(), str(text2[0].text.encode('utf-8').decode())])
+                array.append([tools.driver.find_elements(By.XPATH, '/html/body/mh-root/div/div/mh-large-layout/div/ng-component/div[2]/mh-track-navigation-bar/div/div[1]/div[1]/mh-track-date-picker/div/sds-date-picker/div[1]/button[2]/div/div[2]/span')[0].text.encode('utf-8').decode(), str(text2[0].text.encode('utf-8').decode())])
                 
     # Click on the button Next
     tools.waitLoadingPageByXPATH2(10, '//*[@id="datePickerText"]/div[1]/button[3]')    
@@ -204,7 +225,8 @@ for x in range(count_of_divs):
             # date : /html/body/mh-root/div/div/mh-large-layout/div/ng-component/mh-track-navigation-bar/div/div[1]/div[1]/mh-track-date-picker/div/sds-date-picker/div[1]/button[2]/div/div[2]/span
             # time : /html/body/mh-root/div/div/mh-large-layout/div/ng-component/mh-log-list/div/mh-log-item[3]/div/div/div/div[2]/div/div/mh-time-display/span
             
-            array.append([tools.driver.find_elements(By.XPATH, '/html/body/mh-root/div/div/mh-large-layout/div/ng-component/mh-track-navigation-bar/div/div[1]/div[1]/mh-track-date-picker/div/sds-date-picker/div[1]/button[2]/div/div[2]/span')[0].text.encode('utf-8').decode(), str(text2[0].text.encode('utf-8').decode())])
+            # array.append([tools.driver.find_elements(By.XPATH, '/html/body/mh-root/div/div/mh-large-layout/div/ng-component/mh-track-navigation-bar/div/div[1]/div[1]/mh-track-date-picker/div/sds-date-picker/div[1]/button[2]/div/div[2]/span')[0].text.encode('utf-8').decode(), str(text2[0].text.encode('utf-8').decode())])
+            array.append([tools.driver.find_elements(By.XPATH, '/html/body/mh-root/div/div/mh-large-layout/div/ng-component/div[2]/mh-track-navigation-bar/div/div[1]/div[1]/mh-track-date-picker/div/sds-date-picker/div[1]/button[2]/div/div[2]/span')[0].text.encode('utf-8').decode(), str(text2[0].text.encode('utf-8').decode())])
                 
 
 # Need to go to the Jira
