@@ -45,7 +45,7 @@ j.recoverJiraInformation()
 # # Open MyHours
 m.connectToMyHours()
 # Enter credentilas into the loading screen
-m.enterCredentials()
+# m.enterCredentials()
 
 # Need to go to the date of the Jira was created
 
