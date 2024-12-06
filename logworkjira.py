@@ -40,6 +40,18 @@ tools.openBrowserChrome()
 
 # # Go to the jira to know when the jira was created
 j.connectToJiraInsim(j.jira, j.userInsim, j.userInsimPassword)
+
+# Need to test if we are in the login screen or not
+if tools.waitLoadingPageByXPATH2(3, '//*[@id="loginHeader"]/div') :
+    # Enter credentilas into the loading screen
+    # Wait until the password page is loaded
+    tools.waitLoadingPageByXPATH2(20, '//*[@id="i0118"]')
+    # Wait the choose of how you validate your account
+    tools.waitLoadingPageByXPATH2(20, '//*[@id="idDiv_SAOTCS_Proofs"]/div[3]/div/div/div[2]')
+    # Wait until the JIRA is loaded
+    tools.waitLoadingPageByXPATH2(20, '//*[@id="main"]')
+    
+
 j.recoverJiraInformation()
 
 # # Open MyHours
