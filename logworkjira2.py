@@ -54,7 +54,6 @@ switchToWeekTrackBtn.send_keys("Business operations (non project / service relat
 switchToWeekTrackBtn.send_keys(Keys.DOWN)
 switchToWeekTrackBtn.send_keys(Keys.ENTER)
 
-
 tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="bulk-task-name"]')
 switchToWeekTrackBtn = tools.driver.find_element(By.XPATH, '//*[@id="bulk-task-name"]')
 switchToWeekTrackBtn.click()
@@ -73,7 +72,11 @@ switchToWeekTrackBtn.click()
 switchToWeekTrackBtn.send_keys("Mail + administration")
 switchToWeekTrackBtn.send_keys(Keys.ENTER)
 
-time.sleep(1)
+tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="bulk-edit-dialog"]/div[3]/div/div[2]/button[2]')
+switchToWeekTrackBtn = tools.driver.find_element(By.XPATH, '//*[@id="bulk-edit-dialog"]/div[3]/div/div[2]/button[2]')
+switchToWeekTrackBtn.click()
+
+time.sleep(10)
 
 # go to the research page
 # https://timetrackingwindsurf.web.app/task-search
@@ -206,6 +209,7 @@ if tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="search-results-tabl
     print(str(round(total_sec, 3)))
 
     # Need to update the JIRA for the Story Points only if this one is not filled
+    print ("Test if we need to update the Story Points")
     if tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="customfield_10004-val"]') :
         print ("There is already a Story Point => don't update the Story Point ")
     else : 
@@ -217,9 +221,9 @@ if tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="search-results-tabl
         # click in the input field Story Points
         tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="customfield_10004"]')
         inputStoryPoint = tools.driver.find_element(By.XPATH, '//*[@id="customfield_10004"]')
-        time.sleep(1)
+        time.sleep(2)
         inputStoryPoint.click()
-        time.sleep(1)
+        time.sleep(2)
         inputStoryPoint.send_keys(str(round(total_sec, 3)))
 
         # cllick in the update button
@@ -236,15 +240,124 @@ else :
     total_sec = 0
 
 # Need to place the JIRA in DONE
-tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="opsbar-transitions_more"]')
-log_button = tools.driver.find_element(By.XPATH, '//*[@id="opsbar-transitions_more"]')
-log_button.click()
+print ("Place the JIRA in DONE")
+# Loop until the JIRA status is "Done"
+while True:
+    time.sleep(2)
+    # Need to check where we are in the JIRA
+    # Read the following information from this xpath : //*[@id="opsbar-transitions_more"]/span
+    tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="opsbar-transitions_more"]/span')
+    status = tools.driver.find_element(By.XPATH, '//*[@id="opsbar-transitions_more"]/span').text
+    print(status)
+    # To Do -> Only Testing -> Testing -> Tested -> Done
+    if status == "To Do":
+        # Need to place the JIRA in Only Testing
+        # Click on the more button
+        tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="opsbar-transitions_more"]')
+        more_button = tools.driver.find_element(By.XPATH, '//*[@id="opsbar-transitions_more"]')
+        more_button.click()
+        time.sleep(2)
+        tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="action_id_191"]/a/div/div[1]')
+        log_button = tools.driver.find_element(By.XPATH, '//*[@id="action_id_191"]/a/div/div[1]')
+        log_button.click()
+        time.sleep(2)
 
-time.sleep(2)
-tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="action_id_31"]/a/div/div[1]')
-log_button = tools.driver.find_element(By.XPATH, '//*[@id="action_id_31"]/a/div/div[1]')
+    elif status == "In Development":
+        # Need to place the JIRA in Only Testing
+        # Click on the more button
+        tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="opsbar-transitions_more"]')
+        more_button = tools.driver.find_element(By.XPATH, '//*[@id="opsbar-transitions_more"]')
+        more_button.click()
+        time.sleep(2)
+        tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="action_id_131"]/a/div/div[1]')
+        log_button = tools.driver.find_element(By.XPATH, '//*[@id="action_id_131"]/a/div/div[1]')
+        log_button.click()
+        time.sleep(2)
+
+    elif status == "Only Testing":
+        # Need to place the JIRA in Testing
+        # Click on the more button
+        tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="opsbar-transitions_more"]')
+        more_button = tools.driver.find_element(By.XPATH, '//*[@id="opsbar-transitions_more"]')
+        more_button.click()
+        time.sleep(2)
+        tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="action_id_191"]/a/div/div[1]')
+        log_button = tools.driver.find_element(By.XPATH, '//*[@id="action_id_191"]/a/div/div[1]')
+        log_button.click()
+        time.sleep(2)
+
+    elif status == "Ready To Test":
+        # Need to place the JIRA in Testing
+        # Click on the more button
+        tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="opsbar-transitions_more"]')
+        more_button = tools.driver.find_element(By.XPATH, '//*[@id="opsbar-transitions_more"]')
+        more_button.click()
+        time.sleep(2)
+        if tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="action_id_141"]/a/div/div[1]'):
+            log_button = tools.driver.find_element(By.XPATH, '//*[@id="action_id_141"]/a/div/div[1]')
+            log_button.click()
+            time.sleep(2)
+
+    elif status == "Testing":
+        # Need to place the JIRA in Tested
+        # Click on the more button
+        tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="opsbar-transitions_more"]')
+        log_button = tools.driver.find_element(By.XPATH, '//*[@id="opsbar-transitions_more"]')
+        log_button.click()
+        time.sleep(2)
+        tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="action_id_161"]/a/div/div[1]')
+        log_button = tools.driver.find_element(By.XPATH, '//*[@id="action_id_161"]/a/div/div[1]')
+        log_button.click()
+        time.sleep(2)
+
+    elif status == "In Testing":
+        # Need to place the JIRA in Tested
+        # Click on the more button
+        tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="opsbar-transitions_more"]')
+        log_button = tools.driver.find_element(By.XPATH, '//*[@id="opsbar-transitions_more"]')
+        log_button.click()
+        time.sleep(2)
+        tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="action_id_151"]/a/div/div[1]')
+        log_button = tools.driver.find_element(By.XPATH, '//*[@id="action_id_151"]/a/div/div[1]')
+        log_button.click()
+        time.sleep(2)
+
+    elif status == "Ready To Release":
+        # Need to place the JIRA in Tested
+        # Click on the more button
+        tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="opsbar-transitions_more"]')
+        log_button = tools.driver.find_element(By.XPATH, '//*[@id="opsbar-transitions_more"]')
+        log_button.click()
+        time.sleep(2)
+        tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="action_id_231"]/a/div/div[1]')
+        log_button = tools.driver.find_element(By.XPATH, '//*[@id="action_id_231"]/a/div/div[1]')
+        log_button.click()
+        time.sleep(2)
+
+    elif status == "Tested":
+        # Need to place the JIRA in Done
+        # Click on the more button
+        tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="opsbar-transitions_more"]')
+        log_button = tools.driver.find_element(By.XPATH, '//*[@id="opsbar-transitions_more"]')
+        log_button.click()
+        time.sleep(2)
+        # Since the 16-01-2025, change because the id of the button is not the same in the team IT-Finance
+        # tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="action_id_31"]/a/div/div[1]')
+        # log_button = tools.driver.find_element(By.XPATH, '//*[@id="action_id_31"]/a/div/div[1]')
+        tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="action_id_231"]/a/div/div[1]')
+        log_button = tools.driver.find_element(By.XPATH, '//*[@id="action_id_231"]/a/div/div[1]')
+        log_button.click()
+        time.sleep(2)
+
+    elif status == "Done":
+        print("The JIRA is Done")
+        break
+
+# Need to click on the Edit button
 time.sleep(1)
-log_button.click()
+tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="edit-issue"]')
+edit_issue = tools.driver.find_element(By.XPATH, '//*[@id="edit-issue"]')
+edit_issue.click()
 
 # Actual Story Points
 time.sleep(1)
@@ -253,10 +366,16 @@ customfield_13603 = tools.driver.find_element(By.XPATH, '//*[@id="customfield_13
 customfield_13603.click()
 customfield_13603.send_keys(str(round(total_sec, 3)))
 
-# Click on the done button
-tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="issue-workflow-transition-submit"]')
-Done_button = tools.driver.find_element(By.XPATH, '//*[@id="issue-workflow-transition-submit"]')
-Done_button.click()
+# Click on the save button
+tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="edit-issue-submit"]')
+Save_button = tools.driver.find_element(By.XPATH, '//*[@id="edit-issue-submit"]')
+Save_button.click()
+time.sleep(1)
+
+# # Click on the done button
+# tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="issue-workflow-transition-submit"]')
+# Done_button = tools.driver.find_element(By.XPATH, '//*[@id="issue-workflow-transition-submit"]')
+# Done_button.click()
 
 # Close Browser
 tools.closeBrowserChrome()
