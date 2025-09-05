@@ -7,6 +7,8 @@ import time
 from datetime import datetime, timedelta
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+import tkinter as tk
+from tkinter import messagebox
 
 # -11 for the name of this project LogWorkJira
 save_path = os.path.dirname(os.path.abspath("__file__"))
@@ -18,6 +20,14 @@ delay_properties = 10
 
 # Open Browser
 tools.openBrowserChrome()
+
+# afficher une popup expliquant qu'il faut se connecter une première fois
+# Et installer l'extension chrome pour retenir les users et password
+def show_popup():
+    root = tk.Tk()
+    root.withdraw()  # Hide the root window
+    messagebox.showinfo("Information", "Please connect for the first time and install the Chrome extension to remember the users and passwords.")
+    root.destroy()
 
 # MyHours part
 m.connectToMyTimeTrack()
@@ -76,7 +86,7 @@ tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="bulk-edit-dialog"]/div
 switchToWeekTrackBtn = tools.driver.find_element(By.XPATH, '//*[@id="bulk-edit-dialog"]/div[3]/div/div[2]/button[2]')
 switchToWeekTrackBtn.click()
 
-time.sleep(10)
+time.sleep(5)
 
 # go to the research page
 # https://timetrackingwindsurf.web.app/task-search
@@ -115,6 +125,18 @@ if tools.waitLoadingPageByXPATH2(delay_properties, '//*[@id="search-results-tabl
 
     # Need to go to the Jira
     j.connectToJira(j.jira)
+
+    print ("Test if we need to wait the page of the user / password")
+    if tools.waitLoadingPageByID2(10, 'lightbox') :
+        show_popup()
+        print ("Need to wait the page of the password")
+        tools.waitLoadingPageByID2(10, 'lightbox')
+        print ("Need to wait the way of validation")
+        tools.waitLoadingPageByID2(30, 'idDiv_SAOTCS_Title')
+        print ("Need to wait validation")
+        tools.waitLoadingPageByID2(30, 'stalker')
+    else :
+        print ("No need to wait")
 
     # Need to add all the time for this JIRA
     time_all = timedelta(hours=0, minutes=0, seconds=0)
